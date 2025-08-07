@@ -1,0 +1,42 @@
+{
+  "name": "mokimerchant",
+  "version": "2.0.0",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "keywords": [],
+  "author": "Nikita <hloba.corporation@gmail.com>",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.797.0",
+    "axios": "^1.11.0",
+    "body-parser": "^1.20.3",
+    "connect-mongo": "^5.1.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "email-validator": "^2.0.4",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "googleapis": "^148.0.0",
+    "input": "^1.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.12.1",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^7.0.4",
+    "qrcode": "^1.5.4",
+    "resend": "^4.6.0",
+    "speakeasy": "^2.0.0",
+    "telegraf": "^4.16.3",
+    "telegram": "^2.26.22",
+    "tronweb": "^6.0.1"
+  },
+  "devDependencies": {
+    "pm2": "^6.0.8"
+  }
+}
