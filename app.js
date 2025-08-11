@@ -6,7 +6,7 @@ import path from 'path';
 import cors from 'cors';
 import cookieParser from 'cookie-parser'; 
 
-import authRoutes from './routes/auth.js';
+
 
 import apiRoutes from './routes/api.js';
 import apiAdminRoutes from './routes/apiAdmin.js';
@@ -33,7 +33,7 @@ app.use(
 );
 
 
-app.use(cookieParser()); // Use cookie-parser middleware
+app.use(cookieParser()); 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -44,9 +44,8 @@ mongoose
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.error(err));
 
-// app.use('/', authRoutes); // Auth routes were for EJS login
+
 app.use('/api', apiRoutes);
-// app.use('/irishkachikipiki7843', adminRoutes); // Disabling old admin
 app.use('/admin', apiAdminRoutes);
 
 

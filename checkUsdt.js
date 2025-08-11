@@ -46,7 +46,7 @@ function withTimeout(promise, ms, errMsg = 'timeout') {
 }
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-/* ───────── core ───────── */
+
 async function checkBalances() {
   const payments = await Payment.find({ currency: 'USDT', status: { $ne: 'delete' } });
   console.log(`[Cron] found ${payments.length} USDT payments`);

@@ -69,7 +69,7 @@ async function handleTrxPayments() {
         else if (!aml.passed)           pay.status = 'frozen';
         else                            pay.status = 'completed';
 
-        if (pay.status !== 'frozen') {
+        if (pay.status !== 'frozen' && pay.status !== 'lesspay') {
           console.log(`[${payId}] transfer ${balance} TRX → ${targetWallet}`);
           await transferFunds(pay, targetWallet, balance);
         } else {

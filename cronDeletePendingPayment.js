@@ -13,7 +13,7 @@ async function deleteOldPending() {
   }
   isRunning = true;
 
-  const tsBorder = new Date(Date.now() - 30 * 60 * 1_000); // 30 минут назад
+  const tsBorder = new Date(Date.now() - 30 * 60 * 1_000); 
   try {
     const res = await Payment.updateMany(
       { status: 'pending', createdAt: { $lt: tsBorder } },
@@ -27,7 +27,7 @@ async function deleteOldPending() {
   }
 }
 
-/* ─────── bootstrap & scheduler ─────── */
+
 (async () => {
   try {
     await connectDB();

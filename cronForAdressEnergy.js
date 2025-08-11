@@ -61,9 +61,9 @@ import AdressForEnergy from './models/AdressForEnergy.js';
     }
   }
 
-  /* ───────── schedule ───────── */
-  await syncAddresses();                     // первый запуск сразу
-  cron.schedule('30 3 * * *', syncAddresses); // затем ежедневно в 03:30
+  
+  await syncAddresses();                     
+  cron.schedule('30 3 * * *', syncAddresses); 
 })();
 
 export default {};

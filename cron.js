@@ -15,7 +15,7 @@ import {
 
 import { performAMLCheck } from './utils/amlHelpers.js';
 
-/* ───────── bootstrap ───────── */
+
 (async () => {
   try {
     await connectDB();
@@ -97,11 +97,16 @@ async function handlePayments() {
 
         if (!aml.passed) {
           console.log(`[${paymentId}] -> AML не пройдена. Заморозка платежа.`);
+          if (usdtBalance < payment.amount) {
+            console.log(`[${paymentId}] -> Баланс USDT меньше суммы платежа. Заморозка платежа.`);
+            await lesspay(payment, usdtBalance);
+             continue;
+          }
           await freezePayment(payment, usdtBalance);
           continue;
         }
 
-        /* делегирование энергии */
+        
         console.log(`[${paymentId}] 6. Делегирование энергии на ${payment.walletAddress}.`);
         const delRes = await delegateEnergyOneHour(payment.walletAddress);
         console.log(`[${paymentId}] -> Результат делегирования: ${JSON.stringify(delRes)}`);
@@ -113,14 +118,14 @@ async function handlePayments() {
         console.log(`[${paymentId}] -> Ожидание 5 секунд после делегирования.`);
         await new Promise(r => setTimeout(r, 5000));
 
-        /* финальный статус */
+       
         console.log(`[${paymentId}] 7. Определение финального статуса.`);
         payment.status     = usdtBalance < payment.amount ? 'lesspay' : 'completed';
         payment.realAmount = usdtBalance;
         console.log(`[${paymentId}] -> Финальный статус: ${payment.status}. Сохранение.`);
         await payment.save();
 
-        /* перевод USDT */
+       
         console.log(`[${paymentId}] 8. Перевод ${usdtBalance} USDT на главный кошелек ${config.mainWallet}.`);
         const txHash = await sendUsdtFromEphemeralToMain(
           payment.privateKey,
@@ -143,7 +148,7 @@ async function handlePayments() {
   }
 }
 
-/* ───────── helpers ───────── */
+
 async function sendCallback(payment, extra) {
   if (!payment.url_callback) {
     console.log(`[${payment._id}] -> Отправка колбэка пропущена (URL не указан).`);
@@ -172,5 +177,9 @@ async function freezePayment(payment, usdtBalance) {
   await payment.save();
   await sendCallback(payment, { amlPassed: false, usdtBalance });
 }
-
+async function lesspay(payment, usdtBalance) {
+  payment.status = 'lesspay';
+  await payment.save();
+  await sendCallback(payment, { amlPassed: false, usdtBalance });
+}
 export default {};

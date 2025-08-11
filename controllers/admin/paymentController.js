@@ -12,6 +12,50 @@ import {
   tronWeb,
 } from '../../utils/tronHelpers.js';
 
+export const listPayments = async (req, res, next) => {
+  try {
+    const page  = parseInt(req.query.page, 10)  || 1;
+    const limit = parseInt(req.query.limit, 10) || 10;
+    const data  = await paySvc.list(page, limit);
+    res.json(data);
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const getPaymentById = async (req, res, next) => {
+  try {
+    const payment = await paySvc.getById(req.params.id);
+    if (!payment) return res.status(404).json({ error: 'Платёж не найден' });
+    res.json(payment);
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const updatePaymentStatusApi = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { newStatus } = req.body;
+    if (!newStatus)
+      return res.status(400).json({ error: 'Отсутствует newStatus' });
+
+    const payment = await Payment.findById(id);
+    if (!payment) return res.status(404).json({ error: 'Платёж не найден' });
+
+    const allowed = ['pending', 'wait', 'lesspay', 'completed', 'frozen', 'delete', 'refaund'];
+    if (!allowed.includes(newStatus))
+      return res.status(400).json({ error: 'Недопустимый статус' });
+
+    payment.status = newStatus;
+    await payment.save();
+
+    res.json({ success: true, paymentId: id, newStatus });
+  } catch (e) {
+    next(e);
+  }
+};
+
 export const index = async (req, res, next) => {
   try {
     const { page = 1 } = req.query;
